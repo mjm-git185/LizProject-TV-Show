@@ -8,7 +8,7 @@ function setup() {
   allEpisodes = getAllEpisodes(); //an array of objects (73 episodes)
   makePageForEpisodes(allEpisodes);
   episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`//adds the message for the search result
-
+  selectEpisodes()
   return allEpisodes; //passed the allEpisodes array further
 }
 
@@ -72,9 +72,28 @@ function makePageForEpisodes(episodeList) {
     //calling the function to create a card and appending the card to the end of the root tag
     rootElem.append(createCard(episode));
   }
-  searchResults = [];
+}
+function selectEpisodes(){
+  let selectedEpisode = document.getElementById("selectedpisode");
+  for (const episode of allEpisodes) {
+  let episodeAdd = document.createElement("option");
+  episodeAdd.text = `S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${episode.name}`;
+  episodeAdd.value = episode.name;
+
+  selectedEpisode.add(episodeAdd);
+    }
+  
+  }
+function searchFromMenu(){
+  let search = document.getElementById("search")
+  let selectedEpisode = document.querySelector("select");
+  selectEpisodes.addEventListener("change",() =>{
+
+    search.value = selectedEpisode.value;
+
+  } )
 }
 
-window.onload = setup;
+window.onload = setup ;
 
 //p.s. Apologies if my comments are perhaps a bit too detailed. I need them for the time being.
