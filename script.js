@@ -3,15 +3,13 @@
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
 
-
 function setup() {
   allEpisodes = getAllEpisodes(); //an array of objects (73 episodes)
   makePageForEpisodes(allEpisodes);
-  episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`//adds the message for the search result
-  selectEpisodes()
+  episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
+  selectEpisodes();
   return allEpisodes; //passed the allEpisodes array further
 }
-
 
 // gets the data from the serch bar and updates live
 function searchBarSetUp() {
@@ -23,14 +21,18 @@ function searchBarSetUp() {
       const { name, summary } = episode; // extracts the name and summery
       const resultsOfSearchName = name.toLowerCase().includes(searchTerm); // evaluates the search
       const resultsOfSearchSummery = summary.toLowerCase().includes(searchTerm);
-      if (resultsOfSearchName || resultsOfSearchSummery ) {
+      if (resultsOfSearchName || resultsOfSearchSummery) {
         searchResults.push(episode);
       } //if the search term is found in either name or summery, the episode is added to the searchResults array
     }
+
     makePageForEpisodes(searchResults); //and the page is updated with the search results
-   if (searchResults.length != 0) {
-    episodeCountFromSearch.innerHTML=`${searchResults.length} Episodes`}// adds the appropriat message after the search 
-  else {episodeCountFromSearch.innerHTML=`No episodes found`}
+    if (searchResults.length != 0) {
+      episodeCountFromSearch.innerHTML = `${searchResults.length} Episodes`;
+    } // adds the appropriat message after the search
+    else {
+      episodeCountFromSearch.innerHTML = `No episodes found`;
+    }
   });
 }
 //this function collects details for the future card. for example: detail-image; detail-name; detail-description and so on
@@ -60,7 +62,45 @@ function createCard({ image, name, season, number, summary }) {
   );
   return card;
 }
+function selectEpisodes() {
+  let selectedEpisode = document.getElementById("selectedpisode");
+  for (const episode of allEpisodes) {
+    let episodeAdd = document.createElement("option");
+    episodeAdd.text = `S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${episode.name}`;
+    episodeAdd.value = episode.name;
 
+    selectedEpisode.add(episodeAdd);
+  }
+}
+
+// function selectedEpisodeArray() {
+//   const selectedEpisode = document.getElementById("selectedpisode");
+//   selectedEpisode.addEventListener("click", (e) => {
+//     const selectedEpisodeFromList = e.target.value.toLowerCase();
+//     const selectedEpisodeFromListArr = [];
+//     for (episodes of allEpisodes) {
+//       const { name } = episodes;
+//       const foundName = name.toLowerCase().includes(selectedEpisodeFromList);
+//       if (foundName) {
+//         selectedEpisodeFromListArr.push(episodes);
+//       }
+//     }
+//   });
+
+
+// makePageForEpisodes(selectedEpisodeFromArray);
+// }
+function selectedEpisodeArray() {
+  const selectedEpisode = document.getElementById("episodeAdd");
+  const search = document.getElementById("search")
+  selectedEpisode.addEventListener("click", ()=>{
+
+   const ep = selectedEpisode.value
+  search.innerText = `${ep}`
+  
+  
+  })
+}
 function makePageForEpisodes(episodeList) {
   //At the very beginning, we passed the variable allEpisodes to this function, which contains an array of objects
   const rootElem = document.getElementById("root"); //Located <div id="root"> in the HTML where we will append the created cards
@@ -73,27 +113,6 @@ function makePageForEpisodes(episodeList) {
     rootElem.append(createCard(episode));
   }
 }
-function selectEpisodes(){
-  let selectedEpisode = document.getElementById("selectedpisode");
-  for (const episode of allEpisodes) {
-  let episodeAdd = document.createElement("option");
-  episodeAdd.text = `S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${episode.name}`;
-  episodeAdd.value = episode.name;
-
-  selectedEpisode.add(episodeAdd);
-    }
-  
-  }
-function searchFromMenu(){
-  let search = document.getElementById("search")
-  let selectedEpisode = document.querySelector("select");
-  selectEpisodes.addEventListener("change",() =>{
-
-    search.value = selectedEpisode.value;
-
-  } )
-}
-
-window.onload = setup ;
+window.onload = setup;
 
 //p.s. Apologies if my comments are perhaps a bit too detailed. I need them for the time being.
