@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Elisabeth Matulian (GitHub: Elisabeth-Matulian)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Elisabeth Matulian (GitHub: Elisabeth-Matulian)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
 
-<div class="searchBar">
-<label for="search">Search</label>
-<input type="search" id="search">
-<p id="episodeCountFromSearch"></p>
-</div>
+<body>
 
-<select
-id="selectedEpisode"
- value="select an episode">
- <option>select an episode</option> 
- </select>
-    <div id="root">
-    </div>
+  <div class="searchBar">
+    <label for="search">Search</label>
+    <input type="search" id="search">
+    <p id="episodeCountFromSearch"></p>
+  </div>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+  <select id="selectedEpisode" value="select an episode">
+    <option>select an episode</option>
+  </select>
+  <div id="root">
+  </div>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-    <footer>
+
+  <!-- Loads YOUR javascript code -->
+  <script src="script.js"></script>
+  <footer>
     <a href="https://tvmaze.com/" target="_blank">TV Maze</a>
   </footer>
-  </body>
+</body>
+
 </html>

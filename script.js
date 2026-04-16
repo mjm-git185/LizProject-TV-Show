@@ -2,15 +2,28 @@
 // adds veriadles needed in the global scope
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
+const rootElem = document.getElementById("root"); 
 
 function setup() {
-  allEpisodes = getAllEpisodes(); //an array of objects (73 episodes)
-  makePageForEpisodes(allEpisodes);
-  episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
-  selectEpisodes();
-  selectedEpisodeFiltered();
-  return allEpisodes; //passed the allEpisodes array further
+  rootElem.textContent = "Loading..."
+  const loadData = async () => {
+  const url = "https://api.tvmaze.com/shows/82/episodes";
+  const response = await fetch(url);
+  return await response.json()
+  }
+  loadData().then((episodes) => { 
+    allEpisodes = episodes;
+    makePageForEpisodes(allEpisodes);
+    episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
+    selectEpisodes();
+    selectedEpisodeFiltered();
+    return allEpisodes; //passed the allEpisodes array further
+  })
+  .catch((error) => {
+    rootElem.textContent = "...something went wrong";
+  }) 
 }
+
 
 // gets the data from the serch bar and updates live
 function searchBarSetUp() {
@@ -38,10 +51,10 @@ function searchBarSetUp() {
 }
 //this function collects details for the future card. for example: detail-image; detail-name; detail-description and so on
 function createChildElement(parentElement, tagName, textContent) {
-  const element = document.createElement(tagName); //created a tag, for example <p>; then we will put everything here
-  element.textContent = textContent; //put textContent inside the element, for example: <p>textContent</p>
-  parentElement.append(element); //put the element inside the parentElement, for example: <section><p>textContent</p></section>
-  return element; //and returned it
+  const element = document.createElement(tagName);
+  element.textContent = textContent; 
+  parentElement.append(element);
+  return element;
 }
 searchBarSetUp();
 //this function collects the ready card
@@ -64,8 +77,6 @@ function createCard({ image, name, season, number, summary }) {
   return card;
 }
 
-
-
 function selectEpisodes() {
   let selectedEpisode = document.getElementById("selectedEpisode");
 
@@ -79,9 +90,7 @@ function selectEpisodes() {
     const { name, season, number } = episode;
 
     let episodeAdd = document.createElement("option");
-    episodeAdd.text = `S${season
-      .toString()
-      .padStart(2, "0")}E${number
+    episodeAdd.text = `S${season.toString().padStart(2, "0")}E${number
       .toString()
       .padStart(2, "0")} - ${name}`;
     episodeAdd.value = name;
@@ -92,7 +101,7 @@ function selectEpisodes() {
 
 // fillters by drop down and renders the page
 function selectedEpisodeFiltered() {
-  const selectedEpisode = document.getElementById("selectedEpisode"); 
+  const selectedEpisode = document.getElementById("selectedEpisode");
 
   selectedEpisode.addEventListener("change", () => {
     const ep = selectedEpisode.value;
@@ -112,11 +121,7 @@ function selectedEpisodeFiltered() {
   });
 }
 
-
-
 function makePageForEpisodes(episodeList) {
-  //At the very beginning, we passed the variable allEpisodes to this function, which contains an array of objects
-  const rootElem = document.getElementById("root"); //Located <div id="root"> in the HTML where we will append the created cards
   while (rootElem.firstChild) {
     rootElem.removeChild(rootElem.firstChild);
   }
