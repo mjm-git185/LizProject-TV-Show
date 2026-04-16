@@ -8,6 +8,7 @@ function setup() {
   makePageForEpisodes(allEpisodes);
   episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
   selectEpisodes();
+  selectedEpisodeFiltered();
   return allEpisodes; //passed the allEpisodes array further
 }
 
@@ -62,45 +63,57 @@ function createCard({ image, name, season, number, summary }) {
   );
   return card;
 }
+
+
+
 function selectEpisodes() {
-  let selectedEpisode = document.getElementById("selectedpisode");
+  let selectedEpisode = document.getElementById("selectedEpisode");
+
+  // add "All Episodes" option
+  let allOption = document.createElement("option");
+  allOption.text = "All Episodes";
+  allOption.value = "all";
+  selectedEpisode.add(allOption);
+
   for (const episode of allEpisodes) {
+    const { name, season, number } = episode;
+
     let episodeAdd = document.createElement("option");
-    episodeAdd.text = `S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")} - ${episode.name}`;
-    episodeAdd.value = episode.name;
+    episodeAdd.text = `S${season
+      .toString()
+      .padStart(2, "0")}E${number
+      .toString()
+      .padStart(2, "0")} - ${name}`;
+    episodeAdd.value = name;
 
     selectedEpisode.add(episodeAdd);
   }
 }
 
-// function selectedEpisodeArray() {
-//   const selectedEpisode = document.getElementById("selectedpisode");
-//   selectedEpisode.addEventListener("click", (e) => {
-//     const selectedEpisodeFromList = e.target.value.toLowerCase();
-//     const selectedEpisodeFromListArr = [];
-//     for (episodes of allEpisodes) {
-//       const { name } = episodes;
-//       const foundName = name.toLowerCase().includes(selectedEpisodeFromList);
-//       if (foundName) {
-//         selectedEpisodeFromListArr.push(episodes);
-//       }
-//     }
-//   });
+// fillters by drop down and renders the page
+function selectedEpisodeFiltered() {
+  const selectedEpisode = document.getElementById("selectedEpisode"); 
 
+  selectedEpisode.addEventListener("change", () => {
+    const ep = selectedEpisode.value;
 
-// makePageForEpisodes(selectedEpisodeFromArray);
-// }
-function selectedEpisodeArray() {
-  const selectedEpisode = document.getElementById("episodeAdd");
-  const search = document.getElementById("search")
-  selectedEpisode.addEventListener("click", ()=>{
+    if (ep === "all") {
+      makePageForEpisodes(allEpisodes);
+      episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`;
+      return;
+    }
 
-   const ep = selectedEpisode.value
-  search.innerText = `${ep}`
-  
-  
-  })
+    const filtered = allEpisodes.filter((episode) => {
+      return episode.name === ep;
+    });
+
+    makePageForEpisodes(filtered);
+    episodeCountFromSearch.innerHTML = `1 Episode`;
+  });
 }
+
+
+
 function makePageForEpisodes(episodeList) {
   //At the very beginning, we passed the variable allEpisodes to this function, which contains an array of objects
   const rootElem = document.getElementById("root"); //Located <div id="root"> in the HTML where we will append the created cards
