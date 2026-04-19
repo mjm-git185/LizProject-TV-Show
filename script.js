@@ -1,29 +1,32 @@
 //You can edit ALL of the code here
 // adds veriadles needed in the global scope
+
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
-const rootElem = document.getElementById("root"); 
-
+const rootElem = document.getElementById("root");
 function setup() {
-  rootElem.textContent = "Loading..."
-  const loadData = async () => {
-  const url = "https://api.tvmaze.com/shows/82/episodes";
-  const response = await fetch(url);
-  return await response.json()
-  }
-  loadData().then((episodes) => { 
-    allEpisodes = episodes;
-    makePageForEpisodes(allEpisodes);
-    episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
-    selectEpisodes();
-    selectedEpisodeFiltered();
-    return allEpisodes; //passed the allEpisodes array further
-  })
-  .catch((error) => {
-    rootElem.textContent = "...something went wrong";
-  }) 
-}
+  let url = `https://api.tvmaze.com/shows/9/episodes`;
+  rootElem.textContent = "Loading...";
+  getAllShows();
 
+  const loadData = async () => {
+    const response = await fetch(url);
+    return await response.json();
+  };
+  loadData()
+    .then((episodes) => {
+      allEpisodes = episodes;
+      makePageForEpisodes(allEpisodes);
+      episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
+      selectShow();
+      selectEpisodes();
+      selectedEpisodeFiltered();
+      return allEpisodes; //passed the allEpisodes array further
+    })
+    .catch((error) => {
+      rootElem.textContent = "...something went wrong";
+    });
+}
 
 // gets the data from the serch bar and updates live
 function searchBarSetUp() {
@@ -52,7 +55,7 @@ function searchBarSetUp() {
 //this function collects details for the future card. for example: detail-image; detail-name; detail-description and so on
 function createChildElement(parentElement, tagName, textContent) {
   const element = document.createElement(tagName);
-  element.textContent = textContent; 
+  element.textContent = textContent;
   parentElement.append(element);
   return element;
 }
@@ -79,7 +82,7 @@ function createCard({ image, name, season, number, summary }) {
 
 function selectEpisodes() {
   let selectedEpisode = document.getElementById("selectedEpisode");
-
+  selectedEpisode.innerHTML = ""; // Clear existing options
   // add "All Episodes" option
   let allOption = document.createElement("option");
   allOption.text = "All Episodes";
