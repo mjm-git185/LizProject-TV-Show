@@ -4,16 +4,17 @@
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
 const rootElem = document.getElementById("root");
+let id = 1; // default show id, will be updated when the user selects a show from the dropdown
 function setup() {
-  let url = `https://api.tvmaze.com/shows/9/episodes`;
+  let url = `https://api.tvmaze.com/shows/${id}/episodes`;
   rootElem.textContent = "Loading...";
   getAllShows();
 
-  const loadData = async () => {
+  const loadData = async (url) => {
     const response = await fetch(url);
     return await response.json();
   };
-  loadData()
+  loadData(url)
     .then((episodes) => {
       allEpisodes = episodes;
       makePageForEpisodes(allEpisodes);
@@ -134,6 +135,16 @@ function makePageForEpisodes(episodeList) {
     rootElem.append(createCard(episode));
   }
 }
+
+function selectShowRender() {
+  const selectedShow = document.getElementById("selectedShow");
+  selectedShow.addEventListener("change", () => {
+    id = selectedShow.value;
+    loadData(`https://api.tvmaze.com/shows/${id}/episodes`);
+    selectedEpisodeFiltered();
+  });
+}
+
 window.onload = setup;
 
 //p.s. Apologies if my comments are perhaps a bit too detailed. I need them for the time being.

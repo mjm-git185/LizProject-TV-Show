@@ -28,13 +28,3 @@ function selectShow() {
     selectedShow.add(showAdd);
   }
 }
-
-function selectedShowToUrl() {
-  let url = `https://api.tvmaze.com/shows/9/episodes`;
-
-  const selectedShow = document.getElementById("selectedShow");
-  selectedShow.addEventListener("change", () => {
-    url = `https://api.tvmaze.com/shows/${selectedShow.value}/episodes`;
-    return url;
-  });
-}
