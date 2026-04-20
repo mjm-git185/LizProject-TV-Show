@@ -1,20 +1,37 @@
 //You can edit ALL of the code here
 // adds veriadles needed in the global scope
-
+const allShows = [];
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
 const rootElem = document.getElementById("root");
-let id = 1; // default show id, will be updated when the user selects a show from the dropdown
-function setup() {
-  let url = `https://api.tvmaze.com/shows/${id}/episodes`;
-  rootElem.textContent = "Loading...";
-  getAllShows();
+let id = 1; // default show ID, can be changed by the user through the dropdown menu
+rootElem.textContent = "Loading...";
 
-  const loadData = async (url) => {
-    const response = await fetch(url);
-    return await response.json();
-  };
-  loadData(url)
+const loadData = async (showID) => {
+  const url = `https://api.tvmaze.com/shows/${showID}/episodes`;
+  const response = await fetch(url);
+  return await response.json();
+};
+
+async function getAllShows() {
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows");
+
+    const data = await response.json();
+
+    for (const show of data) {
+      allShows.push(show);
+      allShows.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    selectShow();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+function setup() {
+  getAllShows();
+  selectShowRender();
+  loadData(id)
     .then((episodes) => {
       allEpisodes = episodes;
       makePageForEpisodes(allEpisodes);
@@ -136,12 +153,29 @@ function makePageForEpisodes(episodeList) {
   }
 }
 
+function selectShow() {
+  let selectedShow = document.getElementById("selectedShow");
+  selectedShow.innerHTML = ""; // Clear existing options
+  for (const shows of allShows) {
+    const { name, id } = shows;
+
+    let showAdd = document.createElement("option");
+    showAdd.text = `${name}`;
+    showAdd.value = id;
+    selectedShow.add(showAdd);
+  }
+}
+
 function selectShowRender() {
   const selectedShow = document.getElementById("selectedShow");
   selectedShow.addEventListener("change", () => {
     id = selectedShow.value;
-    loadData(`https://api.tvmaze.com/shows/${id}/episodes`);
-    selectedEpisodeFiltered();
+    loadData(id).then((episodes) => {
+      allEpisodes = episodes;
+      makePageForEpisodes(allEpisodes);
+      episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`;
+      selectEpisodes();
+    });
   });
 }
 
